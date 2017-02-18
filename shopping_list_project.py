@@ -13,7 +13,8 @@ main_menu = """0 Main Menu
 4 Add an item to a shopping list.
 5 Remove an item from a shopping list.
 6 Remove a list by nickname.
-7 Exit when you are done."""
+7 Add multiple items to shopping list
+8 Exit when you're done."""
 
 print main_menu
 
@@ -28,8 +29,8 @@ def check_store_exists(store_name):
     else:
         return False
 
-def check_item_exists(item):
-    if item in shopping_list:
+def check_item_exists(item, store_name):
+    if item in shopping_list[store_name]:
         return True
     else:
         return False
@@ -48,7 +49,23 @@ def remove_store(store_name):
     del shopping_list[store_name]
     print shopping_list
     return shopping_list
-def parse_input_string(input_string):
+
+def add_items_to_store_list(store_name, items):
+    items = items.split(",")
+    for item in items:
+        # shopping_list[store_name].append(item)
+        add_item_to_store_list(store_name, item)
+
+def write_to_file(shopping_list, file_name):
+    # with open(file_name, mode="w") as my_file:
+    my_file = open(file_name, mode="w")
+    write = ""
+    print shopping_list
+    for item in shopping_list:
+        write += item + "\n"
+    my_file.write(write)
+    my_file.close()
+
 def main():
     user_choice = int(raw_input("Please select a number from the menu "))
     if user_choice == 0:
@@ -76,8 +93,8 @@ def main():
         store_name = raw_input("What store do you want to remove an item from? ").lower()
         if check_store_exists(store_name):
             remove_item = raw_input("What item would you like to remove? ").lower()
-            if check_item_exists(remove_item):
-                remove_item_from_store_list(store_name)
+            if check_item_exists(remove_item, store_name):
+                remove_item_from_store_list(store_name, remove_item)
             else:
                 print "The item doesn't exist. "
     if user_choice == 6:
@@ -87,7 +104,17 @@ def main():
         else: 
 
             print "That store doesn't exist. "
+    if user_choice == 7:
+        store_name = raw_input("What store would you like to add items to? ")
+        items = raw_input("What items would you like to add? ")
+        if check_store_exists(store_name):
+            add_items_to_store_list(store_name, items)
 
+    if user_choice == 8:
+        file_name = raw_input("What do you want to call the file? ")
+        store_name = raw_input("What store do you want to write to the file? ")
+        write_to_file(shopping_list[store_name], file_name)
+        
 
 
 
